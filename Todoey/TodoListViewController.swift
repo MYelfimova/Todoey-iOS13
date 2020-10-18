@@ -12,9 +12,14 @@ class TodoListViewController: UITableViewController {
     
     var items = ["Smile at Denis","Find a perfect screen","Buy carrot"]
     
+    var defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        if let itemsArray = defaults.array(forKey: "TodoListArray") as? [String] {
+            items = itemsArray
+        }
     }
     
     //MARK - TableView Datasource methods
@@ -54,8 +59,11 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
             // what will happen once the user clicks on that button
-            print("Success!")
             self.items.append(textField.text ?? "New Item")
+            
+            //Saving the changes to the user defaults
+            self.defaults.setValue(self.items, forKey: "TodoListArray")
+            
             self.tableView.reloadData()
         }
         
@@ -63,8 +71,8 @@ class TodoListViewController: UITableViewController {
             alertTextField.placeholder = "Create new item"
             //print(alertTextField)
             textField = alertTextField
-            print(alertTextField.text)
-            print("Now")
+            //print(alertTextField.text)
+            //print("Now")
         }
         //Here I call the action
         alert.addAction(action)
